@@ -1,7 +1,5 @@
 /* Reset */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -34,13 +32,14 @@ body {
 
 /* Game container */
 .game {
-  max-width: 720px;
+  max-width: 760px;
   margin: 40px auto;
   padding: 24px;
-  background: rgba(20, 22, 28, 0.85);
+  background: rgba(20, 22, 28, 0.86);
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.4);
   backdrop-filter: blur(6px);
+  position: relative;
 }
 
 /* Top bar */
@@ -52,10 +51,22 @@ body {
   margin-bottom: 16px;
 }
 
-/* Scene text */
+/* Scene text + transitions */
+.scene {
+  min-height: 220px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.scene.fade-out {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
 .scene p {
   line-height: 1.7;
-  margin-bottom: 14px;
+  margin: 0 0 14px 0;
 }
 
 .scene .thunder {
@@ -65,7 +76,7 @@ body {
 
 /* Choices */
 .choices {
-  margin-top: 24px;
+  margin-top: 20px;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -75,13 +86,4 @@ button {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
   color: #f0f0f0;
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  background: rgba(255,255,255,0.16);
-}
-
+  pad
