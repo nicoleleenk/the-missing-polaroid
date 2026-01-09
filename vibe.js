@@ -118,6 +118,11 @@ closeDialogueBtn.addEventListener("click", () => {
   dialogueOverlay.hidden = true;
 });
 
+function closeDialogue() {
+  dialogueQueue = [];
+  dialogueOverlay.hidden = true;
+}
+
 // ---------- Scenes (vibe-first Singapore) ----------
 const scenes = {
   void_deck: {
@@ -281,12 +286,14 @@ function hideCredits() {
 }
 
 function showEnding() {
-  // fill name consistently with credits
+  closeDialogue(); // ✅ important: hide the dialogue box
+
   endingMadeByEl.textContent = DEFAULT_MADE_BY;
 
   endingOverlay.hidden = false;
   creditsOverlay.hidden = true;
   titleOverlay.hidden = true;
+}
 
   // optional: stop dialogue if it's open
   dialogueQueue = [];
