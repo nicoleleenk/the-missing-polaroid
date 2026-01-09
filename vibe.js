@@ -1,8 +1,35 @@
-// --- Ambient audio (unchanged vibe) ---
+// ---------- Config ----------
+const SAVE_KEY = "missingPolaroidSave_v1";
+const DEFAULT_MADE_BY = "___"; // change this later (e.g., "Pesto" or your name)
+
+// ---------- Elements ----------
 const rainAudio = document.getElementById("rainSound");
 const thunderAudio = document.getElementById("thunderSound");
+const lightningEl = document.getElementById("lightning");
 
-// Start rain on first click (browser policy)
+const locationEl = document.getElementById("location");
+const timeEl = document.getElementById("time");
+const sceneEl = document.getElementById("scene");
+const choicesEl = document.getElementById("choices");
+
+const titleOverlay = document.getElementById("titleOverlay");
+const newGameBtn = document.getElementById("newGameBtn");
+const continueBtn = document.getElementById("continueBtn");
+const creditsBtn = document.getElementById("creditsBtn");
+
+const creditsOverlay = document.getElementById("creditsOverlay");
+const closeCreditsBtn = document.getElementById("closeCreditsBtn");
+const openCreditsBtn = document.getElementById("openCreditsBtn");
+const madeByEl = document.getElementById("madeBy");
+const resetSaveBtn = document.getElementById("resetSaveBtn");
+
+const dialogueOverlay = document.getElementById("dialogueOverlay");
+const speakerEl = document.getElementById("speaker");
+const dialogueTextEl = document.getElementById("dialogueText");
+const continueDialogueBtn = document.getElementById("continueDialogue");
+const closeDialogueBtn = document.getElementById("closeDialogue");
+
+// ---------- Audio + Lightning ----------
 document.body.addEventListener("click", () => {
   if (rainAudio.paused) {
     rainAudio.volume = 0.35;
@@ -10,27 +37,52 @@ document.body.addEventListener("click", () => {
   }
 }, { once: true });
 
-// Occasional subtle thunder
+function triggerLightning() {
+  lightningEl.classList.add("flash");
+  // A quick double flicker looks more “real”
+  setTimeout(() => lightningEl.classList.remove("flash"), 120);
+  setTimeout(() => lightningEl.classList.add("flash"), 220);
+  setTimeout(() => lightningEl.classList.remove("flash"), 360);
+}
+
+function playThunder() {
+  // Try audio if present; still flash even if audio fails
+  thunderAudio.volume = 0.35;
+  thunderAudio.currentTime = 0;
+  thunderAudio.play().catch(() => {});
+  triggerLightning();
+}
+
+// Occasional subtle thunder — synced with lightning
 setInterval(() => {
-  if (Math.random() < 0.22) {
-    thunderAudio.volume = 0.35;
-    thunderAudio.play().catch(() => {});
-  }
+  if (Math.random() < 0.22) playThunder();
 }, 25000);
 
-// --- Scene system (A) ---
-const locationEl = document.getElementById("location");
-const timeEl = document.getElementById("time");
-const sceneEl = document.getElementById("scene");
-const choicesEl = document.getElementById("choices");
+// ---------- Save / Load ----------
+function saveGame(state) {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  } catch {}
+}
 
-// --- Dialogue system (B) ---
-const dialogueOverlay = document.getElementById("dialogueOverlay");
-const speakerEl = document.getElementById("speaker");
-const dialogueTextEl = document.getElementById("dialogueText");
-const continueBtn = document.getElementById("continueDialogue");
-const closeDialogueBtn = document.getElementById("closeDialogue");
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
 
+function clearSave() {
+  try { localStorage.removeItem(SAVE_KEY); } catch {}
+}
+
+function hasSave() {
+  return !!loadGame();
+}
+
+// ---------- Dialogue ----------
 let dialogueQueue = [];
 
 function openDialogue(lines) {
@@ -45,8 +97,6 @@ function showNextDialogueLine() {
     dialogueOverlay.hidden = true;
     return;
   }
-
-  // line can be string or { speaker, text }
   if (typeof next === "string") {
     speakerEl.textContent = "Narration";
     dialogueTextEl.textContent = next;
@@ -56,13 +106,13 @@ function showNextDialogueLine() {
   }
 }
 
-continueBtn.addEventListener("click", showNextDialogueLine);
+continueDialogueBtn.addEventListener("click", showNextDialogueLine);
 closeDialogueBtn.addEventListener("click", () => {
   dialogueQueue = [];
   dialogueOverlay.hidden = true;
 });
 
-// Scenes data: vibe-first, Singapore setting
+// ---------- Scenes (vibe-first Singapore) ----------
 const scenes = {
   void_deck: {
     location: "Void Deck",
@@ -146,24 +196,29 @@ const scenes = {
 
 let currentSceneKey = "void_deck";
 
-function renderScene(key) {
+// ---------- Rendering + Transitions ----------
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderScene(key, { skipIntro = false } = {}) {
   const data = scenes[key];
   if (!data) return;
 
   locationEl.textContent = data.location;
   timeEl.textContent = data.time;
 
-  // fade out -> swap content -> fade in
   sceneEl.classList.add("fade-out");
   choicesEl.querySelectorAll("button").forEach(b => (b.disabled = true));
 
   setTimeout(() => {
-    // Scene text
-    sceneEl.innerHTML = data.paragraphs
-      .map(p => `<p>${escapeHtml(p)}</p>`)
-      .join("");
+    sceneEl.innerHTML = data.paragraphs.map(p => `<p>${escapeHtml(p)}</p>`).join("");
 
-    // Choices
     choicesEl.innerHTML = "";
     data.choices.forEach(choice => {
       const btn = document.createElement("button");
@@ -176,31 +231,77 @@ function renderScene(key) {
     });
 
     sceneEl.classList.remove("fade-out");
+
+    // Save progress every time we render a scene (keeps it simple)
+    saveGame({ sceneKey: currentSceneKey });
+
+    // Small intro on first fresh load
+    if (!skipIntro && currentSceneKey === "void_deck") {
+      setTimeout(() => {
+        openDialogue([
+          "The rain started at 6:17PM—soft at first, then steady.",
+          "Somewhere in the neighbourhood, something small went missing."
+        ]);
+      }, 350);
+    }
   }, 220);
 }
 
 function goTo(key) {
   currentSceneKey = key;
-  renderScene(key);
+  renderScene(key, { skipIntro: true });
 }
 
-// tiny helper to avoid accidental HTML injection
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+// ---------- Title Screen + Credits ----------
+function showTitle() {
+  titleOverlay.hidden = false;
+  creditsOverlay.hidden = true;
+  continueBtn.disabled = !hasSave();
 }
 
-// Boot
-renderScene(currentSceneKey);
+function hideTitle() {
+  titleOverlay.hidden = true;
+}
 
-// Optional: open with a short mood line
-setTimeout(() => {
-  openDialogue([
-    "The rain started at 6:17PM—soft at first, then steady.",
-    "Somewhere in the neighbourhood, something small went missing."
-  ]);
-}, 350);
+function showCredits() {
+  madeByEl.textContent = DEFAULT_MADE_BY;
+  creditsOverlay.hidden = false;
+  titleOverlay.hidden = true;
+}
+
+function hideCredits() {
+  creditsOverlay.hidden = true;
+}
+
+newGameBtn.addEventListener("click", () => {
+  clearSave();
+  currentSceneKey = "void_deck";
+  hideTitle();
+  renderScene(currentSceneKey, { skipIntro: false });
+});
+
+continueBtn.addEventListener("click", () => {
+  const saved = loadGame();
+  currentSceneKey = saved?.sceneKey && scenes[saved.sceneKey] ? saved.sceneKey : "void_deck";
+  hideTitle();
+  renderScene(currentSceneKey, { skipIntro: true });
+});
+
+creditsBtn.addEventListener("click", showCredits);
+openCreditsBtn.addEventListener("click", showCredits);
+closeCreditsBtn.addEventListener("click", () => {
+  // If title is up, go back there; otherwise just close
+  if (!titleOverlay.hidden) showTitle();
+  else hideCredits();
+});
+
+resetSaveBtn.addEventListener("click", () => {
+  if (!confirm("Reset saved progress?")) return;
+  clearSave();
+  showTitle();
+});
+
+// ---------- Boot ----------
+showTitle();
+// Render something behind title so it looks alive immediately
+renderScene(currentSceneKey, { skipIntro: true });
