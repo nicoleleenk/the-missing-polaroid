@@ -1,6 +1,6 @@
 // ---------- Config ----------
 const SAVE_KEY = "missingPolaroidSave_v1";
-const DEFAULT_MADE_BY = "___"; // change this later (e.g., "Pesto" or your name)
+const DEFAULT_MADE_BY = "nicoleleenk"; // change this later (e.g., "Pesto" or your name)
 
 // ---------- Elements ----------
 const rainAudio = document.getElementById("rainSound");
@@ -28,6 +28,12 @@ const speakerEl = document.getElementById("speaker");
 const dialogueTextEl = document.getElementById("dialogueText");
 const continueDialogueBtn = document.getElementById("continueDialogue");
 const closeDialogueBtn = document.getElementById("closeDialogue");
+
+const endingOverlay = document.getElementById("endingOverlay");
+const restartBtn = document.getElementById("restartBtn");
+const backToTitleBtn = document.getElementById("backToTitleBtn");
+const endingMadeByEl = document.getElementById("endingMadeBy");
+
 
 // ---------- Audio + Lightning ----------
 document.body.addEventListener("click", () => {
@@ -273,6 +279,24 @@ function hideCredits() {
   creditsOverlay.hidden = true;
 }
 
+function showEnding() {
+  // fill name consistently with credits
+  endingMadeByEl.textContent = DEFAULT_MADE_BY;
+
+  endingOverlay.hidden = false;
+  creditsOverlay.hidden = true;
+  titleOverlay.hidden = true;
+
+  // optional: stop dialogue if it's open
+  dialogueQueue = [];
+  dialogueOverlay.hidden = true;
+}
+
+function hideEnding() {
+  endingOverlay.hidden = true;
+}
+
+
 newGameBtn.addEventListener("click", () => {
   clearSave();
   currentSceneKey = "void_deck";
@@ -300,6 +324,19 @@ resetSaveBtn.addEventListener("click", () => {
   clearSave();
   showTitle();
 });
+
+restartBtn.addEventListener("click", () => {
+  hideEnding();
+  clearSave();
+  currentSceneKey = "void_deck";
+  renderScene(currentSceneKey, { skipIntro: false });
+});
+
+backToTitleBtn.addEventListener("click", () => {
+  hideEnding();
+  showTitle();
+});
+
 
 // ---------- Boot ----------
 showTitle();
