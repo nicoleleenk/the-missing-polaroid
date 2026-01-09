@@ -30,6 +30,20 @@ body {
   to   { background-position: 0 100%; }
 }
 
+/* Lightning flash */
+.lightning {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 40% 25%, rgba(255,255,255,0.75), rgba(255,255,255,0));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.lightning.flash {
+  opacity: 0.22;
+}
+
 /* Game container */
 .game {
   max-width: 760px;
@@ -92,14 +106,65 @@ button {
   transition: all 0.2s ease;
 }
 
-button:hover {
-  background: rgba(255,255,255,0.16);
+button:hover { background: rgba(255,255,255,0.16); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Footer links */
+.footer {
+  margin-top: 18px;
+  color: #b0b0b0;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.linkish {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #b8c2d8;
+  text-decoration: underline;
+  cursor: pointer;
 }
+
+.linkish:hover { color: #d6def0; }
+.dot { opacity: 0.6; }
+
+/* Overlay (Title / Credits) */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.42);
+  display: grid;
+  place-items: center;
+  padding: 22px;
+}
+
+.panel {
+  width: min(820px, 100%);
+  background: rgba(18, 20, 26, 0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  padding: 18px 18px 16px 18px;
+}
+
+.title { margin-bottom: 14px; }
+.title-big { font-size: 28px; font-weight: 750; letter-spacing: 0.2px; }
+.title-sub { margin-top: 6px; color: #b8c2d8; line-height: 1.5; }
+
+.panel-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hint { margin-top: 12px; color: #aab3c7; }
+
+.credits p { margin: 10px 0; line-height: 1.6; }
 
 /* Dialogue overlay */
 .dialogue-overlay {
