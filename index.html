@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Rain overlay -->
+  <!-- Rain overlay + lightning flash -->
   <div class="rain"></div>
+  <div id="lightning" class="lightning" aria-hidden="true"></div>
 
   <main class="game" aria-live="polite">
     <header class="top">
@@ -16,20 +17,76 @@
       <span id="time" class="time">Evening</span>
     </header>
 
-    <section id="scene" class="scene">
-      <!-- Scene text is injected by JS -->
-    </section>
+    <section id="scene" class="scene"></section>
 
-    <section id="choices" class="choices">
-      <!-- Choice buttons injected by JS -->
-    </section>
+    <section id="choices" class="choices"></section>
+
+    <footer class="footer">
+      <button id="openCreditsBtn" class="linkish" type="button">Credits</button>
+      <span class="dot">•</span>
+      <button id="resetSaveBtn" class="linkish" type="button" title="Clears saved progress">Reset Save</button>
+    </footer>
   </main>
 
-  <!-- Dialogue layer (B) -->
+  <!-- Title Screen -->
+  <div id="titleOverlay" class="overlay" hidden>
+    <div class="panel">
+      <div class="title">
+        <div class="title-big">The Missing Polaroid</div>
+        <div class="title-sub">A rainy-day slice-of-life mystery in Singapore.</div>
+      </div>
+
+      <div class="panel-actions">
+        <button id="newGameBtn" type="button">New Game</button>
+        <button id="continueBtn" type="button">Continue</button>
+        <button id="creditsBtn" type="button">Credits</button>
+      </div>
+
+      <div class="hint">
+        <small>Tip: click anywhere once to enable rain audio (browser policy).</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credits Screen -->
+  <div id="creditsOverlay" class="overlay" hidden>
+    <div class="panel">
+      <div class="title">
+        <div class="title-big">Credits</div>
+        <div class="title-sub">Thanks for playing in the rain.</div>
+      </div>
+
+      <div class="credits">
+        <p><strong>Game</strong>: The Missing Polaroid</p>
+        <p><strong>Made by</strong>: <span id="madeBy">___</span></p>
+        <p><strong>Setting</strong>: Singapore (heartland)</p>
+        <p><strong>Tools</strong>: HTML • CSS • JavaScript • GitHub Pages</p>
+      </div>
+
+      <div class="panel-actions">
+        <button id="closeCreditsBtn" type="button">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialogue layer -->
   <div id="dialogueOverlay" class="dialogue-overlay" hidden>
     <div class="dialogue">
       <div class="dialogue-top">
         <span id="speaker" class="speaker">Narration</span>
         <button id="closeDialogue" class="icon-btn" aria-label="Close dialogue">✕</button>
       </div>
-      <div id="dialogueText" clas
+      <div id="dialogueText" class="dialogue-text">...</div>
+      <div class="dialogue-actions">
+        <button id="continueDialogue" type="button">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ambient audio -->
+  <audio id="rainSound" src="assets/rain.mp3" loop></audio>
+  <audio id="thunderSound" src="assets/thunder.mp3"></audio>
+
+  <script src="vibe.js"></script>
+</body>
+</html>
