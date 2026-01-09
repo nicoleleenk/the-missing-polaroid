@@ -128,6 +128,7 @@ const scenes = {
       "A fluorescent light buzzes. Somewhere upstairs, someone drags a chair across tiles."
     ],
     choices: [
+      { label: "Call it a night (end demo)", action: () => showEnding() }
       { label: "Go to the café (kopitiam corner)", to: "cafe" },
       { label: "Walk to the bookstore", to: "bookstore" },
       { label: "Cut through to the laundromat", to: "laundromat" },
