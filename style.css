@@ -1,1 +1,87 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(#2b2f3a, #1f232b);
+  color: #e6e6e6;
+  overflow: hidden;
+}
+
+/* Rain overlay */
+.rain {
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.08) 0px,
+    rgba(255,255,255,0.08) 1px,
+    transparent 2px,
+    transparent 6px
+  );
+  animation: rain 0.6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rain {
+  from { background-position: 0 0; }
+  to   { background-position: 0 100%; }
+}
+
+/* Game container */
+.game {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 24px;
+  background: rgba(20, 22, 28, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+}
+
+/* Top bar */
+.top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #b0b0b0;
+  margin-bottom: 16px;
+}
+
+/* Scene text */
+.scene p {
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+.scene .thunder {
+  font-style: italic;
+  color: #a8b4d0;
+}
+
+/* Choices */
+.choices {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+button {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #f0f0f0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: rgba(255,255,255,0.16);
+}
 
