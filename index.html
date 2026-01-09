@@ -1,1 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Missing Polaroid</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Rain overlay -->
+  <div class="rain"></div>
+
+  <!-- Main game window -->
+  <main class="game">
+    <header class="top">
+      <span class="location">Void Deck</span>
+      <span class="time">Evening</span>
+    </header>
+
+    <section class="scene">
+      <p>
+        Rain taps steadily against the concrete.
+        The void deck smells faintly of wet stone and kopi.
+      </p>
+      <p class="thunder">
+        Thunder rolls somewhere far away.
+      </p>
+    </section>
+
+    <section class="choices">
+      <button>Go to the café</button>
+      <button>Wait a while</button>
+      <button>Check your phone</button>
+    </section>
+  </main>
+
+  <!-- Ambient audio -->
+  <audio id="rainSound" src="assets/rain.mp3" loop></audio>
+  <audio id="thunderSound" src="assets/thunder.mp3"></audio>
+
+  <script src="vibe.js"></script>
+</body>
+</html>
 
