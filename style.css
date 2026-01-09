@@ -215,5 +215,15 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .dialogue-actions {
   display: flex;
   justify-content: flex-end;
+
+  /* Ending screen slight emphasis */
+#endingOverlay .title-big {
+  letter-spacing: 0.4px;
+}
+
+#endingOverlay .title-sub {
+  font-style: italic;
+}
+
   margin-top: 12px;
 }
