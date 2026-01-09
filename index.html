@@ -7,39 +7,29 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <!-- Rain overlay -->
   <div class="rain"></div>
 
-  <!-- Main game window -->
-  <main class="game">
+  <main class="game" aria-live="polite">
     <header class="top">
-      <span class="location">Void Deck</span>
-      <span class="time">Evening</span>
+      <span id="location" class="location">Void Deck</span>
+      <span id="time" class="time">Evening</span>
     </header>
 
-    <section class="scene">
-      <p>
-        Rain taps steadily against the concrete.
-        The void deck smells faintly of wet stone and kopi.
-      </p>
-      <p class="thunder">
-        Thunder rolls somewhere far away.
-      </p>
+    <section id="scene" class="scene">
+      <!-- Scene text is injected by JS -->
     </section>
 
-    <section class="choices">
-      <button>Go to the café</button>
-      <button>Wait a while</button>
-      <button>Check your phone</button>
+    <section id="choices" class="choices">
+      <!-- Choice buttons injected by JS -->
     </section>
   </main>
 
-  <!-- Ambient audio -->
-  <audio id="rainSound" src="assets/rain.mp3" loop></audio>
-  <audio id="thunderSound" src="assets/thunder.mp3"></audio>
-
-  <script src="vibe.js"></script>
-</body>
-</html>
-
+  <!-- Dialogue layer (B) -->
+  <div id="dialogueOverlay" class="dialogue-overlay" hidden>
+    <div class="dialogue">
+      <div class="dialogue-top">
+        <span id="speaker" class="speaker">Narration</span>
+        <button id="closeDialogue" class="icon-btn" aria-label="Close dialogue">✕</button>
+      </div>
+      <div id="dialogueText" clas
