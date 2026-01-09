@@ -227,3 +227,27 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
   margin-top: 12px;
 }
+
+/* ===== Overlay stacking order (important) ===== */
+
+/* Rain + lightning are background effects */
+.rain,
+.lightning {
+  z-index: 1;
+}
+
+/* Main game window */
+.game {
+  position: relative;
+  z-index: 10;
+}
+
+/* Dialogue box (should be above game, below overlays) */
+.dialogue-overlay {
+  z-index: 40;
+}
+
+/* Title, Credits, Ending screens (top-most) */
+.overlay {
+  z-index: 50;
+}
